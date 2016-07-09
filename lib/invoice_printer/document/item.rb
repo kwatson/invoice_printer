@@ -27,6 +27,11 @@ module InvoicePrinter
                   :tax3,
                   :amount
 
+      def self.from_json(json)
+        args = Helpers.symbolize_keys(JSON(json))
+        self.new(**args)
+      end
+
       def initialize(name: nil,
                      quantity: nil,
                      unit: nil,
@@ -43,6 +48,23 @@ module InvoicePrinter
         @tax2 = String(tax2)
         @tax3 = String(tax3)
         @amount = String(amount)
+      end
+
+      def to_h
+        {
+          'name': @name,
+          'quantity': @quantity,
+          'unit': @unit,
+          'price': @price,
+          'tax': @tax,
+          'tax2': @tax,
+          'tax3': @tax3,
+          'amount': @amount
+        }
+      end
+
+      def to_json
+        to_h.to_json
       end
     end
   end
