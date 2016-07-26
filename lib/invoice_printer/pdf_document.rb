@@ -193,7 +193,7 @@ module InvoicePrinter
         @pdf.text_box(
           @document.provider_city_part,
           size: 10,
-          at: [60, 590 - @push_down],
+          at: [10, 590 - @push_down],
           width: 240
         )
       end
@@ -272,7 +272,7 @@ module InvoicePrinter
         @pdf.text_box(
           @document.purchaser_city_part,
           size: 10,
-          at: [340, 590 - @push_down],
+          at: [290, 590 - @push_down],
           width: 240
         )
       end
