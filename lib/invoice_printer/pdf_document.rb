@@ -189,19 +189,19 @@ module InvoicePrinter
         at: [60, 605 - @push_down],
         width: 240
       )
-      unless @document.provider_city_part.empty?
-        @pdf.text_box(
-          @document.provider_city_part,
-          size: 10,
-          at: [10, 590 - @push_down],
-          width: 240
-        )
-      end
+      # unless @document.provider_city_part.empty?
+      #   @pdf.text_box(
+      #     @document.provider_city_part,
+      #     size: 10,
+      #     at: [10, 590 - @push_down],
+      #     width: 240
+      #   )
+      # end
       unless @document.provider_extra_address_line.empty?
         @pdf.text_box(
           @document.provider_extra_address_line,
           size: 10,
-          at: [10, 575 - @push_down],
+          at: [10, 590 - @push_down],
           width: 240
         )
       end
@@ -209,13 +209,21 @@ module InvoicePrinter
         @pdf.text_box(
           "#{@labels[:ic]}:    #{@document.provider_ic}",
           size: 10,
-          at: [10, 550 - @push_down],
+          at: [10, 565 - @push_down],
           width: 240
         )
       end
       unless @document.provider_dic.empty?
         @pdf.text_box(
           "#{@labels[:dic]}:    #{@document.provider_dic}",
+          size: 10,
+          at: [10, 550 - @push_down],
+          width: 240
+        )
+      end
+      unless @document.account_iban.empty?
+        @pdf.text_box(
+          "#{@labels[:iban]}:    #{@document.account_iban}",
           size: 10,
           at: [10, 535 - @push_down],
           width: 240
@@ -317,74 +325,20 @@ module InvoicePrinter
     def build_payment_method_box
       if @document.bank_account_number.empty?
         @pdf.text_box(
-          @labels[:payment],
+          @labels[:payment_in_cash],
           size: 10,
           at: [10, 498 - @push_down],
           width: 240
         )
-        @pdf.text_box(
-          @labels[:payment_in_cash],
-          size: 10,
-          at: [10, 483 - @push_down],
-          width: 240
-        )
-        @pdf.stroke_rounded_rectangle([0, 508 - @push_down], 270, 45, 6)
       else
-        box_height = 45
-        push_iban = 0
         @pdf.text_box(
           @labels[:payment_by_transfer],
           size: 10,
           at: [10, 498 - @push_down],
           width: 240
         )
-        @pdf.text_box(
-          "#{@labels[:account_number]}:",
-          size: 10,
-          at: [10, 483 - @push_down],
-          width: 240
-        )
-        @pdf.text_box(
-          @document.bank_account_number,
-          size: 10,
-          at: [75, 483 - @push_down],
-          width: 240
-        )
-        unless @document.account_swift.empty?
-          @pdf.text_box(
-            "#{@labels[:swift]}:",
-            size: 10,
-            at: [10, 468 - @push_down],
-            width: 240
-          )
-          @pdf.text_box(
-            @document.account_swift,
-            size: 10,
-            at: [75, 468 - @push_down],
-            width: 240
-          )
-          box_height += 15
-          push_iban = 15
-          @push_items_table += 15
-        end
-        unless @document.account_iban.empty?
-          @pdf.text_box(
-            "#{@labels[:iban]}:",
-            size: 10,
-            at: [10, 468 - push_iban - @push_down],
-            width: 240
-          )
-          @pdf.text_box(
-            @document.account_iban,
-            size: 10,
-            at: [75, 468 - push_iban - @push_down],
-            width: 240
-          )
-          box_height += 15
-          @push_items_table += 15
-        end
-        @pdf.stroke_rounded_rectangle([0, 508 - @push_down], 270, box_height, 6)
       end
+      @pdf.stroke_rounded_rectangle([0, 508 - @push_down], 270, 45, 6)
     end
 
     # Build the following info box:
@@ -572,7 +526,7 @@ module InvoicePrinter
       @pdf.number_pages(
         '<page> / <total>',
         start_count_at: 1,
-        page_filter: ->(page) { page != 1 },
+        page_filter: ->(page) { page > 0 },
         at: [@pdf.bounds.right - 50, 0],
         align: :right,
         size: 12
