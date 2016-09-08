@@ -189,14 +189,14 @@ module InvoicePrinter
         at: [60, 605 - @push_down],
         width: 240
       )
-      # unless @document.provider_city_part.empty?
-      #   @pdf.text_box(
-      #     @document.provider_city_part,
-      #     size: 10,
-      #     at: [10, 590 - @push_down],
-      #     width: 240
-      #   )
-      # end
+      unless @document.provider_city_part.empty?
+        @pdf.text_box(
+          @document.provider_city_part,
+          size: 10,
+          at: [10, 590 - @push_down],
+          width: 240
+        )
+      end
       unless @document.provider_extra_address_line.empty?
         @pdf.text_box(
           @document.provider_extra_address_line,
